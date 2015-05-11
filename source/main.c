@@ -1,7 +1,7 @@
 #include "stm32f0xx.h"                  // Device header
 #include "retarget_STM32F0.h"
 #include "serial_stdio.h"
-#include "rTouch.h"
+#include "GUI.h"
 
 void setToMaxSpeed(void);
 Serial_t UART2_serial = {UART2_getChar, UART2_sendChar};
@@ -14,18 +14,10 @@ int main(void)
 	setToMaxSpeed();
 	UART2_init(9600);
 	serial_printf(UART2_serial,"\nUSART2 ready\n");
-	rTouch_init();
-	serial_printf(UART2_serial,"Touch Screen ready\n");
+	GUI_init();
+	GUI_calibrate();
+	serial_printf(UART2_serial,"GUI Environment ready\n");
 	while(1){
-		serial_printf(UART2_serial,"Waiting for touch... ");
-		rTouch_waitToPress(-1);
-		serial_printf(UART2_serial,"touch detected X=%d Y=%d\n",rTouch_readX(),rTouch_readY());
-		serial_printf(UART2_serial,"Waiting for release... ");
-		rTouch_waitToRelease(-1);
-		serial_printf(UART2_serial,"release detected X=%d Y=%d\n",rTouch_readX(),rTouch_readY());
-		//serial_printf(UART2_serial,"$ ");
-		//serial_gets(UART2_serial,inputBuffer,IN_BUFFER_SIZE);
-		//serial_printf(UART2_serial,"%s\n",inputBuffer);
 	}
 }
 

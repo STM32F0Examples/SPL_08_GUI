@@ -4,7 +4,7 @@ SOURCE_DIRS:=  device/source ../source ../STM32F0xx_StdPeriph_Driver/src ../reta
 #All the dtandard peripherial library files
 SPL_FILES:= $(notdir $(wildcard ../STM32F0xx_StdPeriph_Driver/src/*.c ))
 #the C files to compile
-CFILES:= system_stm32f0xx.c $(SPL_FILES) main.c serial_stdio.c retarget_STM32F0.c GLCD.c GLCD_STM32F0.c ARM_delay.c rTouch.c
+CFILES:= system_stm32f0xx.c $(SPL_FILES) main.c serial_stdio.c retarget_STM32F0.c GLCD.c GLCD_STM32F0.c ARM_delay.c rTouch.c GUI.c
 #the assembly files assemble
 ASM_FILES:= startup_stm32f051.S
 #the target microcontroller

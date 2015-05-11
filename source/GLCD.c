@@ -738,7 +738,9 @@ void glcd_init(unsigned char mode)
    // limpia la pantalla
    if(operation_mode==GRAPHIC){
 		glcd_fill_screen(OFF);
+		#ifdef USE_BUFFER
 		glcd_load_buffer();
+		#endif
 	 }   
    else glcd_putc('\f');
 }
