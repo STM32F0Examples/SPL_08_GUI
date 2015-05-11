@@ -6,15 +6,15 @@
 /*ADC DMA STUFF*/
 void configureADC(void);
 void startConversion(void);
-int ADC_results[4];
-int trasferComplete=0;
+volatile int ADC_results[4];
+volatile int trasferComplete=0;
 
 void floatPin(unsigned short GPIO_PINS);
 void drivePin(unsigned short GPIO_PINS);
 void configureSPLYPins(void);
 void pullDownPin(unsigned short GPIO_PINS);
 int detect_touch(void);
-int rawX,rawY;
+volatile int rawX,rawY;
 void readXY(void);
 int detectAndRead(void);
 

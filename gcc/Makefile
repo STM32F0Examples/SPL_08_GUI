@@ -4,7 +4,9 @@ SOURCE_DIRS:=  device/source ../source ../STM32F0xx_StdPeriph_Driver/src ../reta
 #All the dtandard peripherial library files
 SPL_FILES:= $(notdir $(wildcard ../STM32F0xx_StdPeriph_Driver/src/*.c ))
 #the C files to compile
-CFILES:= system_stm32f0xx.c $(SPL_FILES) main.c serial_stdio.c retarget_STM32F0.c GLCD.c GLCD_STM32F0.c ARM_delay.c rTouch.c GUI.c
+CFILES:= system_stm32f0xx.c $(SPL_FILES) main.c serial_stdio.c retarget_STM32F0.c GLCD.c GLCD_STM32F0.c rTouch.c GUI.c
+#No optimization C files
+NO_OPT_CFILES:= ARM_delay.c
 #the assembly files assemble
 ASM_FILES:= startup_stm32f051.S
 #the target microcontroller
@@ -27,24 +29,28 @@ DEFINE_FLAGS:=$(patsubst %,-D%,$(DEFINES))
 INCLUDE_FLAGS:=$(patsubst %,-I%,$(INCLUDE_DIRS))
 ARCHFLAGS:= -mthumb -mcpu=cortex-m0
 CFLAGS= $(ARCHFLAGS) -std=c99 -Wall -g -ffunction-sections -fdata-sections
+OFLAGS:= -Os
 CPPFLAGS= $(INCLUDE_FLAGS) $(DEFINE_FLAGS) -D$(TCHIP)
 vpath %.h $(INCLUDE_DIRS)
 vpath %.c $(SOURCE_DIRS)
-vpath %.S device/source
+vpath %.S $(SOURCE_DIRS)
 vpath %.o objects
 
 COBJECTS:= $(patsubst %.c,%.o,$(CFILES))
+NO_OPT_COBJECTS:= $(patsubst %.c,%.o,$(NO_OPT_CFILES))	
 ASMOBJECTS:= $(patsubst %.S,%.o,$(ASM_FILES))
 
 all: salida.elf
 objects:
 	mkdir objects
-salida.elf: objects $(COBJECTS) $(ASMOBJECTS)
-	$(CC) -Wl,--gc-sections -specs=nano.specs $(CFLAGS) objects/*.o $(LFLAGS) -o $@
+salida.elf: objects $(COBJECTS) $(ASMOBJECTS) $(NO_OPT_COBJECTS)
+	$(CC) -Wl,--gc-sections -specs=nano.specs -u _printf_float $(CFLAGS) $(OFLAGS) objects/*.o $(LFLAGS) -o $@
 	arm-none-eabi-size $@ ;
 $(COBJECTS): %.o: %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o objects/$@
+	$(CC) $(CFLAGS) $(OFLAGS) $(CPPFLAGS) -c $< -o objects/$@
 $(ASMOBJECTS): %.o: %.S
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o objects/$@
+$(NO_OPT_COBJECTS): %.o: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o objects/$@
 .PHONY:clean rebuild burn
 clean:

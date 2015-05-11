@@ -3,6 +3,7 @@
 #include "serial_stdio.h"
 #include "GUI.h"
 #include "rTouch.h"
+#include "GLCD.h"
 
 void setToMaxSpeed(void);
 Serial_t UART2_serial = {UART2_getChar, UART2_sendChar};
@@ -21,15 +22,20 @@ int main(void)
 	UART2_init(9600);
 	serial_printf(UART2_serial,"\nUSART2 ready\n");
 	GUI_init();
-	GUI_calibrate();
+	//GUI_calibrate();
 	serial_printf(UART2_serial,"GUI Environment ready\n");
-	serial_printf(UART2_serial,"xOff = %d\n", (int) x_offset);
-	serial_printf(UART2_serial,"xScale = %d\n", (int) x_scale);
-	serial_printf(UART2_serial,"yOff = %d\n", (int) y_offset);
-	serial_printf(UART2_serial,"yScale = %d\n", (int) y_scale);
+	serial_printf(UART2_serial,"xOff = %f\n",  x_offset);
+	serial_printf(UART2_serial,"xScale = %f\n", x_scale);
+	serial_printf(UART2_serial,"yOff = %f\n",  y_offset);
+	serial_printf(UART2_serial,"yScale = %f\n", y_scale);
 	while(1){
-		GUI_waitForPress(-1);
-		serial_printf(UART2_serial,"X=%d\tY=%d\n",GUI_readX(),GUI_readY());
+		if(GUI_waitForPress(0)){
+			serial_printf(UART2_serial,"X=%d\tY=%d\n",GUI_readX(),GUI_readY());
+			glcd_circle(GUI_readX(),GUI_readY(),2,YES,ON);
+		}else{
+			glcd_fill_screen(OFF);
+		}
+		glcd_load_buffer();
 	}
 }
 

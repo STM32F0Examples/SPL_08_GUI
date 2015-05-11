@@ -6,10 +6,10 @@
 #define CAL_DOT_SIZE 3
 #define CAL_DOT_OFFSET 10
 
-float const preset_x_offset= 120;
-float const preset_x_scale= 0.1;
-float const preset_y_offset= 180;
-float const preset_y_scale= 0.1;
+float const preset_x_offset= 86.96;
+float const preset_x_scale= 5.17;
+float const preset_y_offset= 110.25;
+float const preset_y_scale= 9.7;
 
 float x_offset;
 float x_scale;
