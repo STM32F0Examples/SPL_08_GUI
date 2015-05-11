@@ -56,6 +56,9 @@ void getCalibrationPoint(int x_cord,int y_cord,int * x_read,int * y_read){
 	}
 	*x_read=sumX/N_READINGS;
 	*y_read=sumY/N_READINGS;
+	glcd_fill_screen(OFF);
+	glcd_load_buffer();
+	rTouch_waitToRelease(-1);
 }
 
 int GUI_calibrate(void){
@@ -63,11 +66,44 @@ int GUI_calibrate(void){
 	int y_pos[4]={CAL_DOT_OFFSET,CAL_DOT_OFFSET,GLCD_HEIGHT-CAL_DOT_OFFSET,GLCD_HEIGHT-CAL_DOT_OFFSET};
 	int x_read[4];
 	int y_read[4];
+	float dr;
+	float dp;
+	
 	for(int i = 0; i<4 ; i++){
-		getCalibrationPoint(x_pos[i],y_pos[i],&x_read[i],&y_read[i]);
+		getCalibrationPoint(x_pos[i],y_pos[i],&(x_read[i]),&(y_read[i]));
 		delay_ms(500);
 	}
-	return 0;
+	
+	dp=(((x_pos[1]+x_pos[2])-(x_pos[0]+x_pos[3]))/2);
+	dr=(((x_read[1]+x_read[2])-(x_read[0]+x_read[3]))/2);
+	x_scale=dr/dp;
+	
+	dp=(((y_pos[2]+y_pos[3])-(y_pos[0]+y_pos[1]))/2);
+	dr=(((y_read[2]+y_read[3])-(y_read[0]+y_read[1]))/2);
+	y_scale=dr/dp;
+	
+	x_offset=0;
+	y_offset=0;
+	
+	for(int i = 0; i < 4; i++){
+		x_offset+=x_read[i]-x_pos[i]*x_scale;
+		y_offset+=y_read[i]-y_pos[i]*y_scale;;
+	}
+	x_offset/=4;
+	y_offset/=4;
+	
+	return 1;
+}
+
+int GUI_waitForPress(int timeout){
+	return rTouch_waitToPress(timeout);
+}
+
+int GUI_readX(){
+	return (rTouch_readX()-x_offset)/x_scale;
+}
+int GUI_readY(){
+	return (rTouch_readY()-y_offset)/y_scale;
 }
 
 
