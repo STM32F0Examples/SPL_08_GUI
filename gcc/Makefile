@@ -1,7 +1,7 @@
 INCLUDE_DIRS:= device/include cmsis/include ../include ../STM32F0xx_StdPeriph_Driver/inc ../retarget/gcc/include
 SOURCE_DIRS:=  device/source ../source ../STM32F0xx_StdPeriph_Driver/src ../retarget/gcc/source
 
-#All the dtandard peripherial library files
+#All the standard peripheral library files
 SPL_FILES:= $(notdir $(wildcard ../STM32F0xx_StdPeriph_Driver/src/*.c ))
 #the C files to compile
 CFILES:= system_stm32f0xx.c $(SPL_FILES) main.c serial_stdio.c retarget_STM32F0.c GLCD.c GLCD_STM32F0.c rTouch.c GUI.c
@@ -21,14 +21,14 @@ LIB_DIRS:= device/linker
 #the libraries to link
 LIB_NAMES:=
 #linker flags
-LFLAGS:= $(patsubst %,-L%,$(LIB_DIRS)) $(patsubst %,-l%,$(LIB_NAMES)) -T$(LD_SCRIPTS)
+LFLAGS:= $(patsubst %,-L%,$(LIB_DIRS)) $(patsubst %,-l%,$(LIB_NAMES)) -T$(LD_SCRIPTS)  -lc -lnosys
 #PREPROCESSOR OPTIONS
 #Define macro for all files
 DEFINES:= USE_STDPERIPH_DRIVER
 DEFINE_FLAGS:=$(patsubst %,-D%,$(DEFINES))
 INCLUDE_FLAGS:=$(patsubst %,-I%,$(INCLUDE_DIRS))
 ARCHFLAGS:= -mthumb -mcpu=cortex-m0
-CFLAGS= $(ARCHFLAGS) -std=c99 -Wall -g -ffunction-sections -fdata-sections
+CFLAGS= $(ARCHFLAGS) -std=c99 -Wall -g -ffunction-sections -fdata-sections -flto -fno-builtin
 OFLAGS:= -Os
 CPPFLAGS= $(INCLUDE_FLAGS) $(DEFINE_FLAGS) -D$(TCHIP)
 vpath %.h $(INCLUDE_DIRS)
@@ -44,7 +44,7 @@ all: salida.elf
 objects:
 	mkdir objects
 salida.elf: objects $(COBJECTS) $(ASMOBJECTS) $(NO_OPT_COBJECTS)
-	$(CC) -Wl,--gc-sections -specs=nano.specs -u _printf_float $(CFLAGS) $(OFLAGS) objects/*.o $(LFLAGS) -o $@
+	$(CC) -Wl,--gc-sections -specs=nano.specs $(CFLAGS) $(OFLAGS) objects/*.o $(LFLAGS) -o $@
 	arm-none-eabi-size $@ ;
 $(COBJECTS): %.o: %.c
 	$(CC) $(CFLAGS) $(OFLAGS) $(CPPFLAGS) -c $< -o objects/$@
