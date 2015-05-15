@@ -143,10 +143,10 @@ void GUI_drawPushButton(const char *a,unsigned char x, unsigned char y, unsigned
     char c;
     int i=0;
     while((c=a[i])!='\0')i++;
-	glcd_rect(x-3,y-3,x+(i*6)+1,y+8+1,YES,!state);
+	glcd_rect(x-5,y-3,x+(i*6)+3,y+8+1,YES,!state);
     glcd_text57(x,y,a,1,state);
-	glcd_rect(x-3,y-3,x+(i*6)+1,y+8+1,NO,state);
-	glcd_rect(x-4,y-4,x+(i*6)+2,y+8+2,NO,!color);
+	glcd_rect(x-5,y-3,x+(i*6)+3,y+8+1,NO,state);
+	glcd_rect(x-6,y-4,x+(i*6)+4,y+8+2,NO,!color);
 }
 
 int GUI_pushButton_isPressed(const char *a,unsigned char x, unsigned char y, int readX, int readY){
@@ -155,15 +155,15 @@ int GUI_pushButton_isPressed(const char *a,unsigned char x, unsigned char y, int
 	
 	while((a[i])!='\0') i++;
 	
-	x_min=x-5;
-	y_min=y-5;
-	x_max=x+(i*6)+3;
-	y_max=y+8+3;
+	x_min=x-6;
+	y_min=y-6;
+	x_max=x+(i*6)+4;
+	y_max=y+8+4;
 	
 	return ((x_min<readX && readX<x_max) && (y_min<readY && readY<y_max));
 }
 
-#define MAX_BUTTONS	10
+#define MAX_BUTTONS	20
 
 GUI_pushButton_t * registered_button[MAX_BUTTONS];
 int nOfButtons=0;
