@@ -143,10 +143,10 @@ void GUI_drawPushButton(const char *a,unsigned char x, unsigned char y, unsigned
     char c;
     int i=0;
     while((c=a[i])!='\0')i++;
-	glcd_rect(x-5,y-3,x+(i*6)+3,y+8+1,YES,!state);
+	glcd_rect(x-6,y-3,x+(i*6)+4,y+8+1,YES,!state);
     glcd_text57(x,y,a,1,state);
-	glcd_rect(x-5,y-3,x+(i*6)+3,y+8+1,NO,state);
-	glcd_rect(x-6,y-4,x+(i*6)+4,y+8+2,NO,!color);
+	glcd_rect(x-6,y-3,x+(i*6)+4,y+8+1,NO,state);
+	glcd_rect(x-7,y-4,x+(i*6)+5,y+8+2,NO,!color);
 }
 
 int GUI_pushButton_isPressed(const char *a,unsigned char x, unsigned char y, int readX, int readY){
