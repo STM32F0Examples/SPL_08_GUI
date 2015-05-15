@@ -16,75 +16,92 @@ extern float x_scale;
 extern float y_offset;
 extern float y_scale;
 
-void myCallback(GUI_pushButton_t * handle ,int event);
+void myCallback(GUI_pushButton_t * handle, int event);
 
-#define nButtons 10
-GUI_pushButton_t buttons[nButtons]={{10,10,"1",myCallback},{35,10,"2",myCallback},{60,10,"3",myCallback},
-	{10,30,"4",myCallback},{35,30,"5",myCallback},{60,30,"6",myCallback},
-	{10,50,"7",myCallback},{35,50,"8",myCallback},{60,50,"9",myCallback},
-	{10,70,"    0    ",myCallback}};
+#define B_X_START 10
+#define B_Y_START 28
+#define B_X_INC 22
+#define B_Y_INC 18
 
+GUI_pushButton_t buttons[] = {
+	{B_X_START + B_X_INC*0, B_Y_START + B_Y_INC*0, "1", myCallback},
+	{B_X_START + B_X_INC*1, B_Y_START + B_Y_INC*0, "2", myCallback},
+	{B_X_START + B_X_INC*2, B_Y_START + B_Y_INC*0, "3", myCallback},
+	{B_X_START + B_X_INC*0, B_Y_START + B_Y_INC*1, "4", myCallback},
+	{B_X_START + B_X_INC*1, B_Y_START + B_Y_INC*1, "5", myCallback},
+	{B_X_START + B_X_INC*2, B_Y_START + B_Y_INC*1, "6", myCallback},
+	{B_X_START + B_X_INC*0, B_Y_START + B_Y_INC*2, "7", myCallback},
+	{B_X_START + B_X_INC*1, B_Y_START + B_Y_INC*2, "8", myCallback},
+	{B_X_START + B_X_INC*2, B_Y_START + B_Y_INC*2, "9", myCallback},
+	{B_X_START + B_X_INC*3, B_Y_START + B_Y_INC*0, "0", myCallback},
+	{B_X_START + B_X_INC*3, B_Y_START + B_Y_INC*1, "-", myCallback},
+	{B_X_START + B_X_INC*3, B_Y_START + B_Y_INC*2, "+", myCallback},
+	{B_X_START + B_X_INC*4, B_Y_START + B_Y_INC*0, "V", myCallback},
+	{B_X_START + B_X_INC*4, B_Y_START + B_Y_INC*1, "S", myCallback},
+	{B_X_START + B_X_INC*4, B_Y_START + B_Y_INC*2, "R", myCallback},
+	{B_X_START + B_X_INC*5, B_Y_START + B_Y_INC*0, "ENTER", myCallback},
+	{B_X_START + B_X_INC*5, B_Y_START + B_Y_INC*1, " DEL ", myCallback},
+};
 
-int main(void)
-{
+int main(void) {
 	setToMaxSpeed();
 	UART2_init(9600);
-	serial_printf(UART2_serial,"\nUSART2 ready\n");
+	serial_printf(UART2_serial, "\nUSART2 ready\n");
 	GUI_init();
 	//GUI_calibrate();
-	serial_printf(UART2_serial,"GUI Environment ready\n");
-	serial_printf(UART2_serial,"xOff = %f\n",  x_offset);
-	serial_printf(UART2_serial,"xScale = %f\n", x_scale);
-	serial_printf(UART2_serial,"yOff = %f\n",  y_offset);
-	serial_printf(UART2_serial,"yScale = %f\n", y_scale);
-	
-	for(int i=0; i<(sizeof(buttons)/sizeof(GUI_pushButton_t)); i++){
+	serial_printf(UART2_serial, "GUI Environment ready\n");
+	serial_printf(UART2_serial, "xOff = %d.%d\n", (int) x_offset, (int) (x_offset * 100 - ((int) x_offset)*100));
+	serial_printf(UART2_serial, "xScale = %d.%d\n", (int) x_scale, (int) (x_scale * 100 - ((int) x_scale)*100));
+	serial_printf(UART2_serial, "yOff = %d.%d\n", (int) y_offset, (int) (y_offset * 100 - ((int) y_offset)*100));
+	serial_printf(UART2_serial, "yScale = %d.%d\n", (int) y_scale, (int) (y_scale * 100 - ((int) y_scale)*100));
+
+	for (int i = 0; i < (sizeof (buttons) / sizeof (GUI_pushButton_t)); i++) {
 		GUI_addButton(&buttons[i]);
 	}
-	
-	while(1){
+
+	while (1) {
 		GUI_scanScreen();
-	}	
+	}
 }
 
-void myCallback(GUI_pushButton_t * handle ,int event){
+void myCallback(GUI_pushButton_t * handle, int event) {
 	const char * message;
-	
-	switch(event){
+
+	switch (event) {
 		case GUI_EVENT_PRESSED:
-			message="pressed";
+			message = "pressed";
 			break;
 		case GUI_EVENT_RELEASED:
-			message="released";
+			message = "released";
 			break;
 		case GUI_EVENT_CLICKED:
-			message="clicked";
+			message = "clicked";
 			break;
-		default :
-			message="unknown event";
+		default:
+			message = "unknown event";
 	}
-	
-	for(int i=0; i<(sizeof(buttons)/sizeof(GUI_pushButton_t)); i++){
-		if(handle==&buttons[i]){
-			if(event==GUI_EVENT_CLICKED) serial_printf(UART2_serial,"button \"%s\" %s\n",handle->text,message);
+
+	for (int i = 0; i < (sizeof (buttons) / sizeof (GUI_pushButton_t)); i++) {
+		if (handle == &buttons[i]) {
+			if (event == GUI_EVENT_CLICKED) serial_printf(UART2_serial, "button \"%s\" %s\n", handle->text, message);
 		}
 	}
 }
 
-void setToMaxSpeed(void){
-		int internalClockCounter;
-		RCC_PLLCmd(DISABLE);
-		while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY));
-		RCC_HSEConfig(RCC_HSE_OFF);
-		RCC_PLLConfig(RCC_PLLSource_HSI_Div2,RCC_PLLMul_12);
-		RCC_PREDIV1Config(RCC_PREDIV1_Div1);
-		RCC_PLLCmd(ENABLE);
-		while(!RCC_GetFlagStatus(RCC_FLAG_PLLRDY));
-		RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
-		for(internalClockCounter=0;internalClockCounter<1024;internalClockCounter++){
-			if(RCC_GetSYSCLKSource()==RCC_SYSCLKSource_PLLCLK){
-				SystemCoreClockUpdate();
-				break;
-			}
-		}		
+void setToMaxSpeed(void) {
+	int internalClockCounter;
+	RCC_PLLCmd(DISABLE);
+	while (RCC_GetFlagStatus(RCC_FLAG_PLLRDY));
+	RCC_HSEConfig(RCC_HSE_OFF);
+	RCC_PLLConfig(RCC_PLLSource_HSI_Div2, RCC_PLLMul_12);
+	RCC_PREDIV1Config(RCC_PREDIV1_Div1);
+	RCC_PLLCmd(ENABLE);
+	while (!RCC_GetFlagStatus(RCC_FLAG_PLLRDY));
+	RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
+	for (internalClockCounter = 0; internalClockCounter < 1024; internalClockCounter++) {
+		if (RCC_GetSYSCLKSource() == RCC_SYSCLKSource_PLLCLK) {
+			SystemCoreClockUpdate();
+			break;
+		}
+	}
 }
