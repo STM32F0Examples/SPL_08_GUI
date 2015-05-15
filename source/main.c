@@ -19,10 +19,10 @@ extern float y_scale;
 void myCallback(GUI_pushButton_t * handle ,int event);
 
 #define nButtons 10
-GUI_pushButton_t buttons[nButtons]={{10,10,"B1",myCallback},{35,10,"B2",myCallback},{60,10,"B3",myCallback},
-	{10,30,"B4",myCallback},{35,30,"B5",myCallback},{60,30,"B6",myCallback},
-	{10,50,"B7",myCallback},{35,50,"B8",myCallback},{60,50,"B9",myCallback},
-	{10,70,"    B0    ",myCallback}};
+GUI_pushButton_t buttons[nButtons]={{10,10,"1",myCallback},{35,10,"2",myCallback},{60,10,"3",myCallback},
+	{10,30,"4",myCallback},{35,30,"5",myCallback},{60,30,"6",myCallback},
+	{10,50,"7",myCallback},{35,50,"8",myCallback},{60,50,"9",myCallback},
+	{10,70,"    0    ",myCallback}};
 
 
 int main(void)
@@ -66,7 +66,7 @@ void myCallback(GUI_pushButton_t * handle ,int event){
 	
 	for(int i=0; i<(sizeof(buttons)/sizeof(GUI_pushButton_t)); i++){
 		if(handle==&buttons[i]){
-			serial_printf(UART2_serial,"button \"%s\" %s\n",handle->text,message);
+			if(event==GUI_EVENT_CLICKED) serial_printf(UART2_serial,"button \"%s\" %s\n",handle->text,message);
 		}
 	}
 }

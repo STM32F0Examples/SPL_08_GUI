@@ -95,15 +95,48 @@ int GUI_calibrate(void){
 	return 1;
 }
 
+int validX=0;
+int validY=0;
+
+#define MAX_READS 7
+#define MIN_READS 5
+
+int getValidPoint(void){
+	int readingsX[MAX_READS];
+	int readingsY[MAX_READS];
+	int sumX=0, sumY=0;
+	int readingsTaken=0;
+	for(int i=0; i < MAX_READS; i++){
+		if(rTouch_waitToPress(0)){
+			readingsX[readingsTaken]=rTouch_readX();
+			readingsY[readingsTaken]=rTouch_readY();
+			readingsTaken++;
+		}
+	}
+	if(readingsTaken >= MIN_READS){
+		for(int i=0; i<readingsTaken; i++){
+			sumX+=readingsX[i];
+			sumY+=readingsY[i];
+		}
+		validX=sumX/readingsTaken;
+		validY=sumY/readingsTaken;
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
+
 int GUI_waitForPress(int timeout){
-	return rTouch_waitToPress(timeout);
+	rTouch_waitToPress(timeout);
+	return getValidPoint(); 
 }
 
 int GUI_readX(){
-	return (rTouch_readX()-x_offset)/x_scale;
+	return (validX - x_offset)/x_scale;
 }
 int GUI_readY(){
-	return (rTouch_readY()-y_offset)/y_scale;
+	return (validY - y_offset)/y_scale;
 }
 
 void GUI_drawPushButton(const char *a,unsigned char x, unsigned char y, unsigned char color,unsigned char state){
@@ -122,10 +155,10 @@ int GUI_pushButton_isPressed(const char *a,unsigned char x, unsigned char y, int
 	
 	while((a[i])!='\0') i++;
 	
-	x_min=x-3;
-	y_min=y-3;
-	x_max=x+(i*6)+1;
-	y_max=y+8+1;
+	x_min=x-5;
+	y_min=y-5;
+	x_max=x+(i*6)+3;
+	y_max=y+8+3;
 	
 	return ((x_min<readX && readX<x_max) && (y_min<readY && readY<y_max));
 }
@@ -180,7 +213,7 @@ void GUI_scanScreen(void){
 		if(lastPressedButton >= 0)
 			registered_button[lastPressedButton]->callBack(
 				registered_button[lastPressedButton],
-					((currentPressedButton == -1) ? GUI_EVENT_CLICKED :  GUI_EVENT_RELEASED));
+					((!currentScreenIsPressed) ? GUI_EVENT_CLICKED :  GUI_EVENT_RELEASED));
 		if(currentPressedButton >= 0) 
 			registered_button[currentPressedButton]->callBack(
 				registered_button[currentPressedButton],GUI_EVENT_PRESSED);
