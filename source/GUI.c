@@ -106,4 +106,87 @@ int GUI_readY(){
 	return (rTouch_readY()-y_offset)/y_scale;
 }
 
+void GUI_drawPushButton(const char *a,unsigned char x, unsigned char y, unsigned char color,unsigned char state){
+    char c;
+    int i=0;
+    while((c=a[i])!='\0')i++;
+	glcd_rect(x-3,y-3,x+(i*6)+1,y+8+1,YES,!state);
+    glcd_text57(x,y,a,1,state);
+	glcd_rect(x-3,y-3,x+(i*6)+1,y+8+1,NO,state);
+	glcd_rect(x-4,y-4,x+(i*6)+2,y+8+2,NO,!color);
+}
 
+int GUI_pushButton_isPressed(const char *a,unsigned char x, unsigned char y, int readX, int readY){
+	int x_min, x_max, y_min, y_max;
+	int i=0;
+	
+	while((a[i])!='\0') i++;
+	
+	x_min=x-3;
+	y_min=y-3;
+	x_max=x+(i*6)+1;
+	y_max=y+8+1;
+	
+	return ((x_min<readX && readX<x_max) && (y_min<readY && readY<y_max));
+}
+
+#define MAX_BUTTONS	10
+
+GUI_pushButton_t * registered_button[MAX_BUTTONS];
+int nOfButtons=0;
+
+void GUI_addButton(GUI_pushButton_t * newButton){
+	registered_button[nOfButtons]=newButton;
+	nOfButtons++;
+}
+
+int lastPressedButton=-1;
+int lastSreenWasPressed=1;
+
+void GUI_scanScreen(void){
+	int currentPressedButton = -1;
+	int currentScreenIsPressed = 0;
+	int currentXPos,currentYPos;
+	
+	//Scan for changes
+	currentScreenIsPressed=GUI_waitForPress(0);
+	if(currentScreenIsPressed){
+		currentXPos=GUI_readX();
+		currentYPos=GUI_readY();
+		for(int i=0; i<nOfButtons; i++){
+			if(GUI_pushButton_isPressed(registered_button[i]->text,
+					registered_button[i]->x_pos,registered_button[i]->y_pos,
+					currentXPos, currentYPos)){
+				currentPressedButton=i;
+			}
+		}
+	}
+	
+	//update screen if changes detected
+	if((currentPressedButton != lastPressedButton) || (currentScreenIsPressed != lastSreenWasPressed)){
+		glcd_fill_screen(OFF);
+		for(int i=0; i<nOfButtons; i++){
+			if(i == currentPressedButton){
+				GUI_drawPushButton(registered_button[i]->text,registered_button[i]->x_pos,registered_button[i]->y_pos,OFF,ON);
+			}else{
+				GUI_drawPushButton(registered_button[i]->text,registered_button[i]->x_pos,registered_button[i]->y_pos,OFF,OFF);	
+			}
+		}
+		glcd_load_buffer();
+	}
+	
+	//execute call backs
+	if(currentPressedButton != lastPressedButton){
+		if(lastPressedButton >= 0)
+			registered_button[lastPressedButton]->callBack(
+				registered_button[lastPressedButton],
+					((currentPressedButton == -1) ? GUI_EVENT_CLICKED :  GUI_EVENT_RELEASED));
+		if(currentPressedButton >= 0) 
+			registered_button[currentPressedButton]->callBack(
+				registered_button[currentPressedButton],GUI_EVENT_PRESSED);
+	}
+	
+	lastPressedButton=currentPressedButton;
+	lastSreenWasPressed=currentScreenIsPressed;
+	
+}

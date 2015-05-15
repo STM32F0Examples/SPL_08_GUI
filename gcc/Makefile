@@ -29,7 +29,7 @@ DEFINE_FLAGS:=$(patsubst %,-D%,$(DEFINES))
 INCLUDE_FLAGS:=$(patsubst %,-I%,$(INCLUDE_DIRS))
 ARCHFLAGS:= -mthumb -mcpu=cortex-m0
 CFLAGS= $(ARCHFLAGS) -std=c99 -Wall -g -ffunction-sections -fdata-sections -flto -fno-builtin
-OFLAGS:= -Os
+OFLAGS:= -O0
 CPPFLAGS= $(INCLUDE_FLAGS) $(DEFINE_FLAGS) -D$(TCHIP)
 vpath %.h $(INCLUDE_DIRS)
 vpath %.c $(SOURCE_DIRS)

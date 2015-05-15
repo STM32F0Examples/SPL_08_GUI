@@ -620,7 +620,7 @@ unsigned char bit_test(char byteToTest, int bitPos){
 //          color - ON or OFF, color del texto
 //   @return   -
 //
-void glcd_text57(short x, short y, char* textptr, int size, unsigned char color)
+void glcd_text57(short x, short y, const char* textptr, int size, unsigned char color)
 {
    int i, j, k, l, m;                     // Loop counters
    char pixelData[5];                     // Stores character data

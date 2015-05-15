@@ -3,24 +3,24 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 ////                     glcd_160x80.h                        ////
-//// La presente libreria gestiona la comunicación con un GLCD de 160x80   ////
+//// La presente libreria gestiona la comunicaciï¿½n con un GLCD de 160x80   ////
 //// pixeles marca Samsung, modelo LJ41, con controlador SANYO LC7981.       ////
 //// No controla el touchscreen que algunas pantallas pueden incluir      ////
 ////                                                      ////
 //// CONEXION DE GLCD AL MICROCONTROLADOR                           ////
 ////                                                      ////
-//// Para ver que pin del uC está asociado a cada etiqueta,               ////
-//// revisar la sección ETIQUETAS                                 ////
+//// Para ver que pin del uC estï¿½ asociado a cada etiqueta,               ////
+//// revisar la secciï¿½n ETIQUETAS                                 ////
 ////                                                      ////
 //// ---------------------------------------------------------------------   ////
 //// PIN   NOMBRE   FUNCION                              ETIQUETA   ////
 //// ---------------------------------------------------------------------   ////
 ////  1      VSS      Tierra GND                                    ////
-////  2      VCC      voltaje positivo de alimentación 5v                  ////
+////  2      VCC      voltaje positivo de alimentaciï¿½n 5v                  ////
 ////  3      VADJ   contraste - P1 = 10k (ver esquema abajo)            ////
 ////  4      RS      1 = INSTRUCCION      0 = DATO            GLCD_RS      ////
 ////  5      R/W      1 = uC <- GLCD      0 = uC -> GLCD         GLCD_RW      //// set pin to ground
-////  6      E      pasa una instrucción flanco descendente      GLCD_E      ////
+////  6      E      pasa una instrucciï¿½n flanco descendente      GLCD_E      ////
 ////  7      DB0      -                                 GLCD_DB0   ////
 ////  8      DB1       |                                 GLCD_DB1   ////
 ////  9      DB2       |                                 GLCD_DB2   ////
@@ -29,12 +29,12 @@
 ////  12   DB5       |                                 GLCD_DB5   ////
 ////  13   DB6       |                                 GLCD_DB6   ////
 ////  14   DB7      -                                 GLCD_DB7   ////
-////  15   CS      chip select, conexión = GND                        ////
+////  15   CS      chip select, conexiï¿½n = GND                        ////
 ////  16   RES      Reset, normalmente a 5v                         ////
 ////  17   VLCD   contraste, P1 = 10k (ver esquema abajo)               ////
-////  18   DISPOFF   GLCD apagado cuando está a GND, normalmente a 5v      ////
-////  19   EL1      backligh   sin conexión                        ////
-////  20   EL1      backlight   sin conexión                        ////
+////  18   DISPOFF   GLCD apagado cuando estï¿½ a GND, normalmente a 5v      ////
+////  19   EL1      backligh   sin conexiï¿½n                        ////
+////  20   EL1      backlight   sin conexiï¿½n                        ////
 ////                                                      ////
 ////            ESQUEMA P1, POTENCIOMETRO 10K CONTRASTE               ////
 ////                                                      ////
@@ -54,11 +54,11 @@
 //// Funciones de usuario:                                       ////
 ////                                                      ////
 //// glcd_init(mode)                                          ////
-////    * Debe ser llamada antes de cualquier otra función, inicializa el   ////
-////     GLCD en modo gráfico o modo alfanumérico.                     ////
-////     - mode: CHARACTER - modo alfanumérico, GRAPHIC - modo gráfico      ////
-////     NOTA: Para configurar el cursor en modo alfanumérico, ir a la    ////
-////         sección CONFIGURACION INICIAL DEL GLCD, y descomentar      ////
+////    * Debe ser llamada antes de cualquier otra funciï¿½n, inicializa el   ////
+////     GLCD en modo grï¿½fico o modo alfanumï¿½rico.                     ////
+////     - mode: CHARACTER - modo alfanumï¿½rico, GRAPHIC - modo grï¿½fico      ////
+////     NOTA: Para configurar el cursor en modo alfanumï¿½rico, ir a la    ////
+////         secciï¿½n CONFIGURACION INICIAL DEL GLCD, y descomentar      ////
 ////         los defines pertinentes.                           ////
 ////                                                      ////
 ////   <<<<<<<<<<<<<<<   ---------------------------   >>>>>>>>>>>>>>>>>>>      ////
@@ -76,37 +76,37 @@
 ////     coordenadas iniciales y coordenadas finales.                  ////               ////
 ////     - x1,y1: coordenadas iniciales                           ////
 ////     - X2,Y2: coordenadas finales                              ////
-////     - color: color de la línea, ON = negra, OFF = blanca            ////
+////     - color: color de la lï¿½nea, ON = negra, OFF = blanca            ////
 ////                                                      ////
 //// glcd_rect(x1,y1,x2,y2,fill,color)                              ////
-////   * Dibuja un rectángulo en el GLCD o en el buffer, dado por las       ////
+////   * Dibuja un rectï¿½ngulo en el GLCD o en el buffer, dado por las       ////
 ////     coordenadas x1,y1 y x2,y2, puede ser con relleno o             ////
-////     solamente el perímetro.                                 ////
-////     - x1,y1: coordenadas superior izquierda del rectángulo         ////
-////     - x2,y2: coordenadas inferor derecha del rectángulo            ////
-////     - fill: YES - con relleno, NO - solo perímetro               ////
-////     - color: color del perímetro y/o del relleno, ON / OFF         ////
+////     solamente el perï¿½metro.                                 ////
+////     - x1,y1: coordenadas superior izquierda del rectï¿½ngulo         ////
+////     - x2,y2: coordenadas inferor derecha del rectï¿½ngulo            ////
+////     - fill: YES - con relleno, NO - solo perï¿½metro               ////
+////     - color: color del perï¿½metro y/o del relleno, ON / OFF         ////
 ////                                                      ////
 //// glcd_bar(x1,y1,x2,y2,width,color)                              ////
 ////   * Dibuja una barra en el GLCD o en el buffer, dada por las          ////
 ////     coordenadas x1,y1 y x2,y2, de anchura variable, del primer al    ////
 ////     segundo punto. Si las coordenadas no se encuentran alineadas       ////
-////     en el eje x, la barra tendrá angulo diferencte de 0.            ////
+////     en el eje x, la barra tendrï¿½ angulo diferencte de 0.            ////
 ////     - x1,y1: coordenadas superior izquierda de la barra            ////
 ////     - x2,y2: coordenadas superior derecha de la barra               ////
-////     - width: número de pixeles de grosor                        ////
+////     - width: nï¿½mero de pixeles de grosor                        ////
 ////     - color: ON - negro, OFF - blanco                           ////
 ////                                                      ////
 //// glcd_circle(x,y,radius,fill,color)                              ////
 ////   * Dibuja un circulo en el GLCD o en el buffer.                  ////
-////     - x,y: coordenadas del centro del círculo                     ////
-////     - radius: medida en pixeles del radio del círculo               ////
+////     - x,y: coordenadas del centro del cï¿½rculo                     ////
+////     - radius: medida en pixeles del radio del cï¿½rculo               ////
 ////     - fill: YES - con relleno, NO - sin relleno                  ////
-////     - color: color del perímetro y/o del relleno, ON / OFF         ////
+////     - color: color del perï¿½metro y/o del relleno, ON / OFF         ////
 ////                                                      ////
 //// glcd_text57(x,y,*textptr,size,color)                            ////
 ////   * Escribe texto de 5x7 pixeles en el GLCD o el buffer, en modo      ////
-////     gráfico, pudiendose escalar.                              ////
+////     grï¿½fico, pudiendose escalar.                              ////
 ////     - x,y: coordenadas de la esquina superior izquierda del primer   ////
 ////          caracter                                       ////
 ////     - *textptr: puntero a la cadena de caracteres a imprimir         ////
@@ -129,61 +129,61 @@
 ////   <<<<<<<<<<<<<<<   -------------------------------- >>>>>>>>>>>>>>>   ////
 ////                                                      ////
 //// glcd_putc(data)                                          ////
-////   * Función para imprimir caracteres en el GLCD en modo alfanumérico,   ////
-////     su uso es igual al de lcd_putc() de los LCD alfanuméricos.      ////
+////   * Funciï¿½n para imprimir caracteres en el GLCD en modo alfanumï¿½rico,   ////
+////     su uso es igual al de lcd_putc() de los LCD alfanumï¿½ricos.      ////
 ////     - data: un solo caracter o una cadena de caracteres            ////
 ////           las siguientes son secuencias de escape:               ////
-////           \n - salta al inicio de la siguiente línea            ////
-////           \f - borra la pantalla en modo de alfanúmerico y se      ////
+////           \n - salta al inicio de la siguiente lï¿½nea            ////
+////           \f - borra la pantalla en modo de alfanï¿½merico y se      ////
 ////               posiciona en la esquina superior izquierda         ////
 ////   * ejemplo:                                             ////
-////   glcd_putc("HOLA MUNDO\n");   // imprime "HOLA MUNDO" y salta línea   ////
+////   glcd_putc("HOLA MUNDO\n");   // imprime "HOLA MUNDO" y salta lï¿½nea   ////
 ////   * ejemplo con printf para imprimir variables:                  ////
 ////   unsigned int8 temperatura=25;   // variable entera sin signo      ////
 ////   printf(glcd_putc,"\fLa temperatura es: %u\n",temperatura);         ////
 ////   // al principio borra la pantalla y va al inicio, imprime         ////
-////   // "la temperatura es: 25", y salta de línea.                  ////
+////   // "la temperatura es: 25", y salta de lï¿½nea.                  ////
 ////                                                      ////
 //// glcd_gotoxy(x,y)                                          ////
-////   * Salta a las coordenadas x,y del GLCD en modo alfanumérico         ////
+////   * Salta a las coordenadas x,y del GLCD en modo alfanumï¿½rico         ////
 ////     en este modo el GLCD se compone de 26x10 caracteres.            ////
 ////     - x,y: coordenadas, donde pueden valer: x = 1 - 26, y = 1 - 10   ////
 ////                                                      ////
 ////////////////////////////////////////////////////////////////////////////////
 ////                                                      ////
 //// Libreria elaborada por: Fabian Alfonso Flores                     ////
-//// Fecha de liberación: 19/07/2012, México, EdoMex                  ////
-//// Versión de CCS: 4.104                                       ////
-//// Versión de la libreria glcd_160x80.h: 1.00                        ////
+//// Fecha de liberaciï¿½n: 19/07/2012, Mï¿½xico, EdoMex                  ////
+//// Versiï¿½n de CCS: 4.104                                       ////
+//// Versiï¿½n de la libreria glcd_160x80.h: 1.00                        ////
 //// La presente libreria no garantiza el funcionamiento del GLCD asociado   ////
 //// no obstante, respaldo la misma al decir que ha sido probada arduamente   ////
 //// con resultados satisfactorios.                               ////
 //// Esta libreria no se encuentra registrada, su uso es totalmente libre   ////
-//// siempre y cuando no se utilice con propósitos comerciales, se puede   ////
+//// siempre y cuando no se utilice con propï¿½sitos comerciales, se puede   ////
 //// modificar, siempre y cuando siga manteniendo su caracter libre y se   ////
 //// redistribuyan las mejoras gratuitamente.                        ////
 ////                                                      ////
 //// Algunas mejoras para versiones futuras:                        ////
-//// * El modo de lectura del GLCD al uC, no se puede leer información      ////
+//// * El modo de lectura del GLCD al uC, no se puede leer informaciï¿½n      ////
 ////   proveniente del GLCD                                       ////
-//// * El bit busy_flag no se encuentra habilitado para ser leído, en su   ////
-////   lugar, se implementa un tiempo de espera después de escribir un      ////
+//// * El bit busy_flag no se encuentra habilitado para ser leï¿½do, en su   ////
+////   lugar, se implementa un tiempo de espera despuï¿½s de escribir un      ////
 ////   comando, pudiendo el usuario variar el mismo.                  ////
-//// * La secuencia de escape \b en modo alfanumérico que permite retroce-   ////
-////   der una posición de memoria el cursor.                        ////
-//// * Se advierte que algunas funciones en modo gráfico pudieran llegar a    ////
+//// * La secuencia de escape \b en modo alfanumï¿½rico que permite retroce-   ////
+////   der una posiciï¿½n de memoria el cursor.                        ////
+//// * Se advierte que algunas funciones en modo grï¿½fico pudieran llegar a    ////
 ////   tener algunos bugs con el uso del buffer activado, puesto que este   ////
 ////   modo de funcionamiento no se probo tan a fondo.                  ////
 //// * Cargar imagenes menores a 160x80 pixeles dando las coordenadas      ////
 ////   de la esquina superior izquierda, para poder cargar distintas      ////
-////   imágenes más pequeñas en diferentes posiciones de pantalla.         ////
-//// * No se ha escrito una función para leer multiples imágenes declaradas ////
-////   en arreglos tipo const, en su lugar escribo la siguiente función      ////
+////   imï¿½genes mï¿½s pequeï¿½as en diferentes posiciones de pantalla.         ////
+//// * No se ha escrito una funciï¿½n para leer multiples imï¿½genes declaradas ////
+////   en arreglos tipo const, en su lugar escribo la siguiente funciï¿½n      ////
 ////   en el programa principal:                                 ////
 ////                                                      ////
 //// void put_image()                                          ////////////
 //// {                                                            ////
-////   glcd_go_address(0);      // manda la posición de memoria 0 del GLCD CGRAM   ////
+////   glcd_go_address(0);      // manda la posiciï¿½n de memoria 0 del GLCD CGRAM   ////
 ////   glcd_command_write();   // manda comando para comenzar a enviar bytes      ////
 ////   for(i=0;i<80;i++)      // ciclo for para escribir las filas            ////
 ////   {                                                         ////
@@ -204,7 +204,7 @@
 ////                                       .                     ////
 ////                     { 0x00,0x00 ... 20 bytes en total ... 0x00,0x00}};   ////
 ////                                                            ////
-//// Al llamar esta función, la misma escribirá en la pantalla del GCLD la imagen   ////
+//// Al llamar esta funciï¿½n, la misma escribirï¿½ en la pantalla del GCLD la imagen   ////
 //// compuesta por los 80x20 bytes. Recomiendo el programa Image2code para generar   ////
 //// el arreglo que conforma la imagen.                                    ////
 ////                                                            ////
@@ -221,26 +221,26 @@
 //#define NO_PORT    // bus de datos con pines separados
 
 /* NOTA IMPORTANTE!: El configurar los pines de forma separada tiene la ventaja
-                de la flexibilidad de conexión, pero también tiene la gran
+                de la flexibilidad de conexiï¿½n, pero tambiï¿½n tiene la gran
                 desventaja que el tiempo de procesamiento se eleva, en
-                comparación de la velocidad necesaria en el GLCD, así que
+                comparaciï¿½n de la velocidad necesaria en el GLCD, asï¿½ que
                 es recomendable usar un puerto completo para su control.
 ------------------------------------------------------------------------------------*/
 
 // BUFFER INTERNO
 //
 // El siguiente define permite utilizar un buffer interno para escribir en el GLCD
-// con lo que todos los comandos de impresión que se le manden al GLCD no se verán
-// en la pantalla, sino que se escribirán en el buffer interno, esto ahorra mucho
-// tiempo de ejecución, ya que una vez que el buffer contiene todo lo que se desea
+// con lo que todos los comandos de impresiï¿½n que se le manden al GLCD no se verï¿½n
+// en la pantalla, sino que se escribirï¿½n en el buffer interno, esto ahorra mucho
+// tiempo de ejecuciï¿½n, ya que una vez que el buffer contiene todo lo que se desea
 // mostrar en la pantalla, se manda al GLCD por medio del comando glcd_load_buffer(),
-// lo cuál se traduce en una elevada velocidad de impresión.
+// lo cuï¿½l se traduce en una elevada velocidad de impresiï¿½n.
 
-/*    NOTA IMPORTANTE: El uso del buffer interno solo está disponible a partir de los
+/*    NOTA IMPORTANTE: El uso del buffer interno solo estï¿½ disponible a partir de los
                 uC de la familia 18F, ya que la familia 16F tiene los bancos de 
                 datos en forma separada y no es posible declarar una variable
-                de 1600 bytes. Si se está utilizando un PIC16F, se deberá 
-                comentar esta línea y no usar buffer. */
+                de 1600 bytes. Si se estï¿½ utilizando un PIC16F, se deberï¿½ 
+                comentar esta lï¿½nea y no usar buffer. */
 
 //#define USE_BUFFER   1
 
@@ -248,7 +248,7 @@
 
 // ETIQUETAS
 //
-// Cambia los pines de conexión como más te convenga
+// Cambia los pines de conexiï¿½n como mï¿½s te convenga
 
 //#ifdef NO_PORT
 //#define GLCD_DB0   PIN_D7
@@ -270,7 +270,7 @@
 CONFIGURACION INCIAL DEL GLCD
 
 Para configurar el GLCD, debes descomentar cada uno de los siguientes defines
-dependiendo de la configuración que requieras.
+dependiendo de la configuraciï¿½n que requieras.
 
 NOTA: Estos defines sirven solamente en modo alfanumerico, es decir, cuando se
      inicializa el glcd con el comando glcd_init(CHARACTER) */
@@ -298,8 +298,8 @@ NOTA: Estos defines sirven solamente en modo alfanumerico, es decir, cuando se
 #define OFF         0
 
 #ifndef GLCD_WIDTH
-#define GLCD_WIDTH 160       // tamaño en pixeles del ancho
-#define GLCD_HEIGHT 80       // tamaño en pixeles de la altura
+#define GLCD_WIDTH 160       // tamaï¿½o en pixeles del ancho
+#define GLCD_HEIGHT 80       // tamaï¿½o en pixeles de la altura
 #endif
 
 
@@ -307,17 +307,17 @@ NOTA: Estos defines sirven solamente en modo alfanumerico, es decir, cuando se
 // BUFFER INTERNO
 //
 // El siguiente define permite utilizar un buffer interno para escribir en el GLCD
-// con lo que todos los comandos de impresión que se le manden al GLCD no se verán
-// en la pantalla, sino que se escribirán en el buffer interno, esto ahorra mucho
-// tiempo de ejecución, ya que una vez que el buffer contiene todo lo que se desea
+// con lo que todos los comandos de impresiï¿½n que se le manden al GLCD no se verï¿½n
+// en la pantalla, sino que se escribirï¿½n en el buffer interno, esto ahorra mucho
+// tiempo de ejecuciï¿½n, ya que una vez que el buffer contiene todo lo que se desea
 // mostrar en la pantalla, se manda al GLCD por medio del comando glcd_load_buffer(),
-// lo cuál se traduce en una elevada velocidad de impresión.
+// lo cuï¿½l se traduce en una elevada velocidad de impresiï¿½n.
 
-/*    NOTA IMPORTANTE: El uso del buffer interno solo está disponible a partir de los
+/*    NOTA IMPORTANTE: El uso del buffer interno solo estï¿½ disponible a partir de los
                 uC de la familia 18F, ya que la familia 16F tiene los bancos de 
                 datos en forma separada y no es posible declarar una variable
-                de 1600 bytes. Si se está utilizando un PIC16F, se deberá 
-                comentar esta línea y no usar buffer. */
+                de 1600 bytes. Si se estï¿½ utilizando un PIC16F, se deberï¿½ 
+                comentar esta lï¿½nea y no usar buffer. */
 
 #define USE_BUFFER   1
 #ifdef USE_BUFFER
@@ -336,7 +336,7 @@ void glcd_load_buffer(void);
 void glcd_gotoxy(char x,char y);
 ////////////////////////////////////////////////////////////////////////////////////
 //   NOTA: FUNCION VALIDA SOLO EN MODO DE CARACTERES
-//   Imprime caracteres en la pantalla, su funcionamiento es igual a la función
+//   Imprime caracteres en la pantalla, su funcionamiento es igual a la funciï¿½n
 //   lcd_putc de los LCD alfanumericos.
 //
 //   @param   data - caracter o apuntador a cadena de caracteres a imprimir en el GLCD
@@ -353,7 +353,7 @@ void glcd_putc(char data);
 //
 void glcd_pixel(unsigned short x,unsigned short y,unsigned char color);
 ///////////////////////////////////////////////////////////////////////////////////
-//   Dibuja una línea en el GLCD o el buffer, usando el algoritmo de Bresenham
+//   Dibuja una lï¿½nea en el GLCD o el buffer, usando el algoritmo de Bresenham
 //
 //   @param   (x1, y1) - coordenadas de inicio
 //          (x2, y2) - coordenadas finales
@@ -362,12 +362,12 @@ void glcd_pixel(unsigned short x,unsigned short y,unsigned char color);
 //
 void glcd_line(signed short x1, signed short y1, signed short x2, signed short y2, unsigned char color);
 //////////////////////////////////////////////////////////////////////////////////
-//   Dibuja un rectángulo en el GLCD o el buffer
+//   Dibuja un rectï¿½ngulo en el GLCD o el buffer
 //    
 //   @param   (x1, y1) - coordenadas de inicio
 //        (x2, y2) - coordenadas finales
 //         fill - YES o NO, indica si tiene relleno o no
-//         color - ON or OFF, indica el color del relleno o del perímetro
+//         color - ON or OFF, indica el color del relleno o del perï¿½metro
 //   @return   -
 //
 void glcd_rect(short x1, short y1, short x2, short y2, short fill, unsigned char color);
@@ -377,7 +377,7 @@ void glcd_rect(short x1, short y1, short x2, short y2, short fill, unsigned char
 //
 //   @param   (x1, y1) - coordenadas de inicio
 //        (x2, y2) - coordenadas finales
-//         width  - El número de pixeles de ancho
+//         width  - El nï¿½mero de pixeles de ancho
 //         color - ON or OFF, color de la barra
 //   @return   -
 //
@@ -388,12 +388,12 @@ void glcd_bar(short x1, short y1, short x2, short y2, short width, unsigned char
 //   @param   (x,y) - coordenadas del centro del circulo
 //         radius - radio del circulo en pixeles
 //         fill - YES or NO, si tiene relleno o no
-//         color - ON or OFF, color del relleno o del perímetro
+//         color - ON or OFF, color del relleno o del perï¿½metro
 //   @return   -
 //
 void glcd_circle(short x, short y, short radius, unsigned char fill, unsigned char color);
 //////////////////////////////////////////////////////////////////////////////////
-//   Escribe texto en el GLCD en modo gráfico
+//   Escribe texto en el GLCD en modo grï¿½fico
 //
 //   @param   (x,y) - coordenada superior izquierda del primer caracter
 //         textptr - puntero a una cadena de caracteres en memoria
@@ -401,7 +401,7 @@ void glcd_circle(short x, short y, short radius, unsigned char fill, unsigned ch
 //          color - ON or OFF, color del texto
 //   @return   -
 //
-void glcd_text57(short x, short y, char* textptr, int size, unsigned char color);
+void glcd_text57(short x, short y, const char* textptr, int size, unsigned char color);
 //////////////////////////////////////////////////////////////////////////////////
 //   Limpia la pantalla o el buffer de blanco o negro
 // 
@@ -412,11 +412,11 @@ void glcd_text57(short x, short y, char* textptr, int size, unsigned char color)
 void glcd_fill_screen(unsigned char color);
 
 //////////////////////////////////////////////////////////////////////////////////
-//   Inicializa la pantalla en modo gráfico o alfanumerico, debe ser llamada antes 
+//   Inicializa la pantalla en modo grï¿½fico o alfanumerico, debe ser llamada antes 
 //   de cualquier otra funcion
 //
 //   @param   mode:    CHARACTER    - inicializa el GLCD en modo de caracteres
-//               GRAPHIC      - inicializa el GLCD en modo gráfico
+//               GRAPHIC      - inicializa el GLCD en modo grï¿½fico
 //   @return   -
 //
 void glcd_init(unsigned char mode);
