@@ -6,6 +6,9 @@
 #include "GLCD.h"
 
 void setToMaxSpeed(void);
+void resetBuffer(void);
+void writeToBuffer(char newChar);
+
 Serial_t UART2_serial = {UART2_getChar, UART2_sendChar};
 
 #define IN_BUFFER_SIZE 80
@@ -17,9 +20,11 @@ extern float y_offset;
 extern float y_scale;
 
 void myCallback(GUI_pushButton_t * handle, int event);
+void delCallback(GUI_pushButton_t * handle, int event);
+void enterCallback(GUI_pushButton_t * handle, int event);
 
-#define B_X_START 10
-#define B_Y_START 28
+#define B_X_START 11
+#define B_Y_START 25
 #define B_X_INC 22
 #define B_Y_INC 18
 
@@ -36,18 +41,23 @@ GUI_pushButton_t buttons[] = {
 	{B_X_START + B_X_INC*3, B_Y_START + B_Y_INC*0, "0", myCallback},
 	{B_X_START + B_X_INC*3, B_Y_START + B_Y_INC*1, "-", myCallback},
 	{B_X_START + B_X_INC*3, B_Y_START + B_Y_INC*2, "+", myCallback},
-	{B_X_START + B_X_INC*4, B_Y_START + B_Y_INC*0, "V", myCallback},
-	{B_X_START + B_X_INC*4, B_Y_START + B_Y_INC*1, "S", myCallback},
-	{B_X_START + B_X_INC*4, B_Y_START + B_Y_INC*2, "R", myCallback},
-	{B_X_START + B_X_INC*5, B_Y_START + B_Y_INC*0, "ENTER", myCallback},
-	{B_X_START + B_X_INC*5, B_Y_START + B_Y_INC*1, " DEL ", myCallback},
+	{B_X_START + B_X_INC*4, B_Y_START + B_Y_INC*0, "S", myCallback},
+	{B_X_START + B_X_INC*4, B_Y_START + B_Y_INC*1, "V", myCallback},
+	{B_X_START + B_X_INC*4, B_Y_START + B_Y_INC*2, "D", myCallback},
+	{B_X_START + B_X_INC*5, B_Y_START + B_Y_INC*0, "ENTER", enterCallback},
+	{B_X_START + B_X_INC*5, B_Y_START + B_Y_INC*1, " DEL ", delCallback},
 };
+
+#define C_BUFFER_SIZE 20
+char commandBuffer[C_BUFFER_SIZE];
+GUI_label_t myLabel={5,5,C_BUFFER_SIZE-1,commandBuffer};
 
 int main(void) {
 	setToMaxSpeed();
 	UART2_init(9600);
 	serial_printf(UART2_serial, "\nUSART2 ready\n");
 	GUI_init();
+	resetBuffer();
 	//GUI_calibrate();
 	serial_printf(UART2_serial, "GUI Environment ready\n");
 	serial_printf(UART2_serial, "xOff = %d.%d\n", (int) x_offset, (int) (x_offset * 100 - ((int) x_offset)*100));
@@ -58,34 +68,49 @@ int main(void) {
 	for (int i = 0; i < (sizeof (buttons) / sizeof (GUI_pushButton_t)); i++) {
 		GUI_addButton(&buttons[i]);
 	}
-
+	GUI_addLabel(&myLabel);
+	
 	while (1) {
 		GUI_scanScreen();
 	}
 }
 
-void myCallback(GUI_pushButton_t * handle, int event) {
-	const char * message;
 
-	switch (event) {
-		case GUI_EVENT_PRESSED:
-			message = "pressed";
-			break;
-		case GUI_EVENT_RELEASED:
-			message = "released";
-			break;
-		case GUI_EVENT_CLICKED:
-			message = "clicked";
-			break;
-		default:
-			message = "unknown event";
+int CB_index = 0 ;
+
+void resetBuffer(void){
+	for(int i = 0; i< C_BUFFER_SIZE; i++){
+		commandBuffer[i]='\0';
 	}
+	CB_index=0;
+}
 
-	for (int i = 0; i < (sizeof (buttons) / sizeof (GUI_pushButton_t)); i++) {
+void writeToBuffer(char newChar){
+	if(CB_index<(C_BUFFER_SIZE-1)){
+		commandBuffer[CB_index]=newChar;
+		CB_index++;
+	}
+}
+
+void myCallback(GUI_pushButton_t * handle, int event) {
+	
+	for (int i = 0; i < ((sizeof (buttons) / sizeof (GUI_pushButton_t))-2); i++) {
 		if (handle == &buttons[i]) {
-			if (event == GUI_EVENT_CLICKED) serial_printf(UART2_serial, "button \"%s\" %s\n", handle->text, message);
+			if (event == GUI_EVENT_CLICKED) writeToBuffer(handle->text[0]);
 		}
 	}
+}
+
+void enterCallback(GUI_pushButton_t * handle, int event) {
+	if (event == GUI_EVENT_CLICKED) {
+		serial_printf(UART2_serial, "%s\n", commandBuffer);	
+		resetBuffer();
+	}
+	
+}
+
+void delCallback(GUI_pushButton_t * handle, int event) {
+	resetBuffer();
 }
 
 void setToMaxSpeed(void) {
