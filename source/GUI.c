@@ -149,6 +149,16 @@ void GUI_drawPushButton(const char *a,unsigned char x, unsigned char y, unsigned
 	glcd_rect(x-7,y-4,x+(i*6)+5,y+8+2,NO,!color);
 }
 
+void GUI_drawLabel(const char *a,unsigned char x, unsigned char y, unsigned char color,unsigned char state){
+    char c;
+    int i=0;
+    while((c=a[i])!='\0')i++;
+	//glcd_rect(x-6,y-3,x+(i*6)+4,y+8+1,YES,!state);
+    glcd_text57(x,y,a,1,state);
+	//glcd_rect(x-6,y-3,x+(i*6)+4,y+8+1,NO,state);
+	//glcd_rect(x-7,y-4,x+(i*6)+5,y+8+2,NO,!color);
+}
+
 int GUI_pushButton_isPressed(const char *a,unsigned char x, unsigned char y, int readX, int readY){
 	int x_min, x_max, y_min, y_max;
 	int i=0;
@@ -171,6 +181,16 @@ int nOfButtons=0;
 void GUI_addButton(GUI_pushButton_t * newButton){
 	registered_button[nOfButtons]=newButton;
 	nOfButtons++;
+}
+
+#define MAX_LABELS	10
+
+GUI_label_t * registered_label[MAX_LABELS];
+int nOfLabels=0;
+
+void GUI_addLabel(GUI_label_t * newLabel){
+	registered_label[nOfLabels]=newLabel;
+	nOfLabels++;
 }
 
 int lastPressedButton=-1;
@@ -222,4 +242,9 @@ void GUI_scanScreen(void){
 	lastPressedButton=currentPressedButton;
 	lastSreenWasPressed=currentScreenIsPressed;
 	
+	//Update Labels
+	for(int i=0; i<nOfLabels; i++){
+		GUI_drawLabel(registered_label[i]->text,registered_label[i]->x_pos,registered_label[i]->y_pos,OFF,ON);	
+	}
+	glcd_load_buffer();
 }

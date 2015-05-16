@@ -12,6 +12,13 @@ typedef struct GUI_pushButton_struct{
 	void (*callBack)(struct GUI_pushButton_struct * handle ,int event);
 }GUI_pushButton_t;
 
+typedef struct GUI_label_struct{
+	unsigned char x_pos;
+	unsigned char y_pos;
+	unsigned char maxChars;
+	const char * text;
+}GUI_label_t;
+
 void GUI_init(void);
 int GUI_calibrate(void);
 int GUI_waitForPress(int timeout);
@@ -22,6 +29,8 @@ void GUI_drawPushButton(const char *a,unsigned char x, unsigned char y, unsigned
 int GUI_pushButton_isPressed(const char *a,unsigned char x, unsigned char y, int readX, int readY);
 
 void GUI_addButton(GUI_pushButton_t * newButton);
+void GUI_addLabel(GUI_label_t * newLabel);
+
 void GUI_scanScreen(void);
 
 #endif
